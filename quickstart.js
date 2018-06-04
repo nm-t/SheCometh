@@ -102,13 +102,44 @@ function listEvents(auth) {
 
 					// Create the new event for next month
 					const end = event.end.dateTime || event.end.date;
-					PlanTheComing(end);
+					// PlanTheComing(end);
+
+
+					let offset = 28 * 24 * 60 * 60 * 1000;
+					var lastDay = new Date(end);
+					var newDate = new Date(lastDay.getTime() + offset);
+				
+					var event = {
+						'summary': 'She Cometh - Node edition!',
+						'start': {
+							'dateTime': new Date(),
+							'timeZone': 'Australia/Melbourne',
+						},
+						'end': {
+							'dateTime': newDate,
+							'timeZone': 'Australia/Melbourne',
+						},
+						};
+						
+						calendar.events.insert({
+						auth: auth,
+						calendarId: 'primary',
+						resource: event,
+						}, function(err, event) {
+						if (err) {
+							console.log('There was an error contacting the Calendar service: ' + err);
+							return;
+						}
+						console.log('Event created: %s', event.htmlLink);
+					});
+
+
 				}
 			});
 		}
 		
 		else {
-		  console.log('She has not cometh.');
+		  console.log('She has never cometh.');
 		}
 	});
 }
@@ -122,5 +153,27 @@ function PlanTheComing(lastDay) {
 	var lastDay = new Date(lastDay);
 	var newDate = new Date(lastDay.getTime() + offset);
 
-	// Create new event
+	var event = {
+		'summary': 'She Cometh - Node edition!',
+		'start': {
+			'date': '2018-06-07',
+			'timeZone': 'Australia/Melbourne',
+		},
+		'end': {
+			'date': newDate,
+			'timeZone': 'Australia/Melbourne',
+		},
+		};
+		
+		calendar.events.insert({
+		auth: auth,
+		calendarId: 'primary',
+		resource: event,
+		}, function(err, event) {
+		if (err) {
+			console.log('There was an error contacting the Calendar service: ' + err);
+			return;
+		}
+		console.log('Event created: %s', event.htmlLink);
+	});
 }
